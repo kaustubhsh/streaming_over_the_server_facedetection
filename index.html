@@ -11,8 +11,9 @@
 		window.addEventListener("DOMContentLoaded", function() {
 			// Grab elements, create settings, etc.
            
-		var canvas =  document.createElement('canvas');
-		canvas.setAttribute('width', 300);
+
+			var canvas =  document.createElement('canvas');
+			canvas.setAttribute('width', 300);
     		canvas.setAttribute('height', 300);
             var context = canvas.getContext('2d');
             var video = document.getElementById('video');
@@ -48,7 +49,46 @@
 					video.play();
 				}, errBack);
 			}
-		
+
+
+
+			// Event handler whenever the video play html
+			video.addEventListener('play', function() {
+				var $this = this; //cache
+
+				// loop function to send video frames continuously
+  				(function loop() {
+
+  				// Till the video is playing
+    			if (!$this.paused && !$this.ended) {
+
+    				// draws the video frames to the canvas created
+      				context.drawImage($this, 0, 0,300,300);
+
+      				// generates the data from the canvas for each frame
+				    var data = canvas.toDataURL('image/png');
+
+				    // specifying the metadata -- content type
+				    var str = "data:image/jpeg;base64,";
+
+				    //sending data using XMLHttpRequest (easy to use)
+				    var xhr = new XMLHttpRequest();
+				    
+				    //create the object for request 
+				    // specify the method = POST for sending 
+				    // url - which will be recieving our data
+				    xhr.open("POST","http://127.0.0.1:5000", true);
+				    // transmit the frame to specified url
+				    xhr.send(data);					
+
+				    // specify the rate the function will iterate
+	   				setTimeout(loop, 1000 / 30); // drawing at 30fps
+      				
+    			}
+				})();
+
+  			}, 0);
+
 		}, false);
 
 </script>
