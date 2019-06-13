@@ -31,9 +31,22 @@ def index():
 		source = cv2.imdecode(npimg, 1)
 		''' conversion finished '''
 
+
+		''' applying face detection on captured image '''
+		# defining classifier --- haarcascade face classifier
+		face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+		face_img = source.copy()
+		# get faces from the image
+		face_rects = face_cascade.detectMultiScale(face_img,scaleFactor=1.2)
+		# draw rectangle over each face in image
+		for (x,y,w,h) in face_rects: 
+			cv2.rectangle(face_img, (x,y), (x+w,y+h), (255,255,255), 10) 
+		''' face detection finished '''
+		
+
 		''' saving the image to the local images folder
 		to see that conversion is successful '''
-		cv2.imwrite('images\\hello'+str(count)+'.jpg', source)
+		cv2.imwrite('images\\hello'+str(count)+'.jpg', face_img)
 		
 		return ""
 
