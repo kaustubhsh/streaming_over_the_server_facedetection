@@ -1,0 +1,3 @@
+All the images written by cv2.imwrite() function will be shown here... in 'images' folder
+
+This proves that our code is working fine...
